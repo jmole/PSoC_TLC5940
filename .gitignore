@@ -1,0 +1,19 @@
+#
+# .gitignore file for PSoC Creator 3.0
+#
+
+# Log files
+*.cydsn/*.log
+*.cydsn/*.rpt
+*.cydsn/*_timing.html
+*.cydsn/*.cycdx
+*.cydsn/*.cyfit
+*.cydsn/*.svd
+
+
+
+# Temp directry
+*.cydsn/Generated_Source/*
+*.cydsn/CortexM3/*
+*.cydsn/CortexM0/*
+*.cydsn/codegentemp/*
