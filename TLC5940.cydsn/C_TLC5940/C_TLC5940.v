@@ -11,10 +11,94 @@
 //
 // ========================================
 `include "cypress.v"
+
+module Counter4096 (
+    input wire clock, 
+    input wire reset, 
+    output wire tc
+);
+
+parameter eight_bit_cycle_count = 16;
+
+/* ==================== Wire and Register Declarations ==================== */
+wire dec_A1;
+wire done;
+wire Datapath_1_d0_load;
+wire Datapath_1_d1_load;
+wire Datapath_1_f0_load;
+wire Datapath_1_f1_load;
+wire Datapath_1_route_si;
+wire Datapath_1_route_ci;
+wire  [2:0] Datapath_1_select; 
+
+/* ==================== Assignment of Combinatorial Variables ==================== */
+assign tc = (done);
+assign Datapath_1_d0_load = (1'b0);
+assign Datapath_1_d1_load = (1'b0);
+assign Datapath_1_f0_load = (1'b0);
+assign Datapath_1_f1_load = (1'b0);
+assign Datapath_1_route_si = (1'b0);
+assign Datapath_1_route_ci = (1'b0);
+assign Datapath_1_select[0] = (dec_A1);
+assign Datapath_1_select[1] = (done);
+assign Datapath_1_select[2] = (reset);
+
+/* ==================== Datapath_1 (Width: 8) Instantiation ==================== */
+parameter Datapath_1_dpconfig0 = 
+{
+    `CS_ALU_OP__INC, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM0:  */
+    `CS_ALU_OP__DEC, `CS_SRCA_A1, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC__ALU, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM1:  */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC_NONE, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM2:  */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC_NONE, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM3:  */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_A0, `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC___D1, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM4: reset */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC___D1, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM5:  */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC___D1, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM6:  */
+    `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0, `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC___D1, `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA, `CS_CMP_SEL_CFGA,  /*CFGRAM7:  */
+    8'hFF, 8'h00, /* CFG9 */
+    8'hFF, 8'hFF, /* CFG11-10 */
+    `SC_CMPB_A1_D1, `SC_CMPA_A0_D1, `SC_CI_B_ARITH, `SC_CI_A_ARITH, `SC_C1_MASK_DSBL, `SC_C0_MASK_DSBL, `SC_A_MASK_DSBL, `SC_DEF_SI_0, `SC_SI_B_DEFSI, `SC_SI_A_DEFSI, 
+    `SC_A0_SRC_ACC, `SC_SHIFT_SL, 1'b0, 1'b0, `SC_FIFO1_BUS, `SC_FIFO0_BUS, `SC_MSB_ENBL, `SC_MSB_BIT0, `SC_MSB_NOCHN, `SC_FB_NOCHN, `SC_CMP1_NOCHN, `SC_CMP0_NOCHN, /* CFG15-14 */
+    3'b000, `SC_FIFO_SYNC__ADD, 2'b000, `SC_FIFO1_DYN_OF, `SC_FIFO0_DYN_OF, `SC_FIFO_CLK1_POS, `SC_FIFO_CLK0_POS, `SC_FIFO_CLK__DP, `SC_FIFO_CAP_AX, `SC_FIFO_LEVEL, `SC_FIFO__SYNC, `SC_EXTCRC_DSBL, `SC_WRK16CAT_DSBL /* CFG17-16 */
+};
+cy_psoc3_dp8 #(
+    .cy_dpconfig_a( Datapath_1_dpconfig0 ),
+    .d0_init_a( 8'b00000001 ),
+    .d1_init_a( eight_bit_cycle_count ),
+    .a0_init_a( 8'b00000000 ),
+    .a1_init_a( 8'b00000000 ))
+    GSCLKCounter(
+        .clk( clock ),
+        .cs_addr( Datapath_1_select ),
+        .route_si( Datapath_1_route_si ),
+        .route_ci( Datapath_1_route_ci ),
+        .f0_load( Datapath_1_f0_load ),
+        .f1_load( Datapath_1_f1_load ),
+        .d0_load( Datapath_1_d0_load ),
+        .d1_load( Datapath_1_d1_load ),
+        .ce0(  ), 
+        .cl0(  ), 
+        .z0( dec_A1 ), 
+        .ff0(  ), 
+        .ce1(  ), 
+        .cl1(  ), 
+        .z1( done ), 
+        .ff1(  ), 
+        .ov_msb(  ), 
+        .co_msb(  ), 
+        .cmsb(  ), 
+        .so(  ), 
+        .f0_bus_stat(  ), 
+        .f0_blk_stat(  ), 
+        .f1_bus_stat(  ), 
+        .f1_blk_stat(  )
+    );
+
+endmodule
+
 //`#end` -- edit above this line, do not edit this line
 // Generated on 08/18/2014 at 14:09
-// Component: DMAController
-module DMAController (
+// Component: C_TLC5940
+module C_TLC5940 (
 	output wire active,
 	output wire DMAReq,
     output wire loadD0withF0,
@@ -25,23 +109,18 @@ module DMAController (
     output reg  vprg,
     output reg  blank,
     output wire gsclk,
-    output wire gsclk_cnt_enable,
 	input   CLK,
-	input   nrq,
-	input   reset,
-    input   gsclk_done,
-    input   enable
+	input   nrq
 );
 
 //`#start body` -- edit after this line, do not edit this line
 
-parameter word_count = 8;
-parameter dma_clock_cycles = 10;
-parameter dma_word_timer_count = dma_clock_cycles - word_count < 1 ? 1 : dma_clock_cycles - word_count;
-
+parameter  num_devices = 1;
+localparam word_count = 8*num_devices;
+localparam dma_clock_cycles = 10;
+localparam dma_word_timer_count = dma_clock_cycles - word_count < 1 ? 1 : dma_clock_cycles - word_count;
 
 wire fifo_has_room;
-wire fifo_has_room_2;
 reg  start_dma;
 reg  enable_all;
 reg sclk_extra_pulse;
@@ -59,6 +138,19 @@ reg dma_nrq;
 always @ (posedge CLK) begin
     dma_nrq <= nrq;    
 end
+
+//////////////////////////////////////////////////////////////////////////////////////////
+// 
+// Control Register
+
+wire [7:0] control_reg;
+wire reset = control_reg[0];
+wire enable = control_reg[1];
+cy_psoc3_control #(.cy_init_value (8'b00000001), .cy_force_order(`TRUE))
+ControlReg(
+/* output [07:00] */ .control(control_reg)
+);
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 
@@ -206,7 +298,7 @@ cy_psoc3_dp16 #(
     .d1_init_a( 8'b00000000 ), .d1_init_b( 8'b00000000 ),
     .a0_init_a( 8'b00000000 ), .a0_init_b( 8'b00000000 ),
     .a1_init_a( 8'b00000000 ), .a1_init_b( 8'b00000000 ))
-    Datapath_1(
+    BitShifter(
         .clk( CLK ),
         .cs_addr( Datapath_1_select ),
         .route_si( Datapath_1_route_si ),
@@ -245,10 +337,16 @@ reg [1:0] data_counter;
 reg gsclk_enable;
 reg component_on;
 
+wire gsclk_done;
+wire gsclk_counter_reset = ~gsclk_enable;
+Counter4096 #(.eight_bit_cycle_count (4))
+gsclk_counter (
+    .clock(CLK),
+    .reset(gsclk_counter_reset),
+    .tc(gsclk_done)
+);
+
 assign active = component_on;
-
-assign gsclk_cnt_enable = ~gsclk_enable;
-
 assign gsclk = gsclk_enable ? ~CLK : 0;
 
 always @ (negedge CLK ) begin
