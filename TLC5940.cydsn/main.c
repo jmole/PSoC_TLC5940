@@ -73,7 +73,7 @@ int main()
     DP_AUX_1 &= ~0x01;
     
     CyExitCriticalSection(interruptState);
-    Counter_1_Start();
+    
     DMA_Setup((uint32)(&led_data),(uint32)DMAController_1_Datapath_1_u0__16BIT_F0_REG,sizeof(uint16)*8);
     /* Place your initialization/startup code here (e.g. MyInst_Start()) */
     //CyDelay(1000);
@@ -87,7 +87,7 @@ int main()
         {
             led_data.pwm[i+2] = i == j ? 4095 : 0;
         }
-        CyDelay(1);
+        CyDelay(100);
         j = (j + 1 ) % 12;
     }
 }

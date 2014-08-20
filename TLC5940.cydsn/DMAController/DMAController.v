@@ -41,13 +41,24 @@ parameter dma_word_timer_count = dma_clock_cycles - word_count < 1 ? 1 : dma_clo
 
 
 wire fifo_has_room;
+wire fifo_has_room_2;
 reg  start_dma;
 reg  enable_all;
 reg sclk_extra_pulse;
 
 
 
-assign DMAReq = start_dma & fifo_has_room;
+reg dma_req;
+always @ (negedge CLK) begin
+    dma_req <= start_dma & fifo_has_room;    
+end
+
+assign DMAReq = dma_req;
+
+reg dma_nrq;
+always @ (posedge CLK) begin
+    dma_nrq <= nrq;    
+end
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // 
@@ -216,7 +227,7 @@ cy_psoc3_dp16 #(
         .co_msb(  ), 
         .cmsb(  ), 
         .so( { shift_out_dp, Datapath_1_so_2 } ), 
-        .f0_bus_stat( { fifo_has_room, Datapath_1_f0_bus_stat_1 } ), 
+        .f0_bus_stat( { fifo_has_room, fifo_has_room_2 } ), 
         .f0_blk_stat( /*{ fifoempty, Datapath_1_f0_blk_stat_1 } */), 
         .f1_bus_stat(  ), 
         .f1_blk_stat(  )
@@ -282,7 +293,7 @@ always @ (negedge CLK ) begin
             end else begin
                 vprg <= 0;
             end
-            if (word_counter_output == 3) begin
+            if (word_counter_output == dma_word_timer_count) begin
                 state <= 2;
                 counter_reset <= 1;
             end else begin
@@ -299,7 +310,7 @@ always @ (negedge CLK ) begin
         end
         3: begin
             dma_delay <= 0;
-            if (nrq) begin
+            if (dma_nrq) begin
                 start_dma <= 0;
                 state <= 4;
             end
