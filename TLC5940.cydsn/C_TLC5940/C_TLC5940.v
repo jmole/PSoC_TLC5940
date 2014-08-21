@@ -101,8 +101,6 @@ endmodule
 module C_TLC5940 (
 	output wire active,
 	output wire DMAReq,
-    output wire loadD0withF0,
-    output wire shift_nLOAD,
     output wire SCLK,
     output wire SDATA,
     output reg  xlat,
@@ -124,7 +122,8 @@ wire fifo_has_room;
 reg  start_dma;
 reg  enable_all;
 reg sclk_extra_pulse;
-
+wire loadD0withF0;
+wire shift_nLOAD;
 
 
 reg dma_req;
@@ -391,7 +390,7 @@ always @ (negedge CLK ) begin
             end else begin
                 vprg <= 0;
             end
-            if (word_counter_output == dma_word_timer_count) begin
+            if (word_counter_output == 0) begin
                 state <= 2;
                 counter_reset <= 1;
             end else begin
